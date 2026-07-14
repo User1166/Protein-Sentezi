@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}ProteinLab{% endblock %}</title>
+  <meta name="description" content="Protein sentezini eğlenerek öğren — 12. sınıf biyoloji konu anlatımı ve mini oyunlar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(var(--border))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: '1.25rem', xl: '1.5rem', '2xl': '1.75rem', '3xl': '2rem' },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen bg-gradient-mesh">
+  <nav class="sticky top-0 z-50 backdrop-blur-lg bg-background/70 border-b border-border">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <a href="{{ url_for('home') }}" class="flex items-center gap-2 font-bold text-lg">
+        <span class="text-2xl">🧬</span>
+        <span class="hidden sm:inline text-gradient">ProteinLab</span>
+      </a>
+      <div class="flex items-center gap-1">
+        {% set links = [('home','Ana Sayfa'), ('lesson','Anlatım'), ('amino','Amino Asitler'), ('games','Oyun')] %}
+        {% set urls = {'home': url_for('home'), 'lesson': url_for('lesson'), 'amino': url_for('amino_acids'), 'games': url_for('games')} %}
+        {% for key, label in links %}
+          <a href="{{ urls[key] }}"
+             class="px-4 py-2 rounded-full text-sm font-semibold transition-all
+             {% if active == key %}bg-primary text-primary-foreground shadow-soft{% else %}text-foreground/70 hover:text-foreground hover:bg-muted{% endif %}">
+            {{ label }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <footer class="py-8 text-center text-sm text-muted-foreground">
+    Protein Sentezi 2026®
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

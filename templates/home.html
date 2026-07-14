@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}ProteinLab — Protein sentezini eğlenerek öğren{% endblock %}
+{% block content %}
+<section class="relative overflow-hidden px-6 pt-16 pb-24">
+  <div class="absolute -top-20 -left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-blob"></div>
+  <div class="absolute top-40 -right-20 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-blob" style="animation-delay:3s"></div>
+
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="inline-block bg-card border border-border px-4 py-1.5 rounded-full text-xs font-semibold mb-6 shadow-soft">
+      🧪 Biyoloji • Eğlenceli anlatım
+    </span>
+    <h1 class="text-5xl md:text-7xl font-bold leading-[1.05] mb-6">
+      Protein sentezini <br>
+      <span class="text-gradient">eğlenerek öğren</span>
+    </h1>
+    <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+      DNA, mRNA, ribozom ve kodonlar... Karışık görünen her şeyi mutfak benzetmesiyle
+      sade bir dille anlattık. Ayrıca eğlenerek pekiştirmeniz için oyunlar da ekledik. 🎮
+    </p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="{{ url_for('lesson') }}" class="bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold shadow-pop hover:scale-105 transition-transform">📖 Konu anlatımına git</a>
+      <a href="{{ url_for('games') }}" class="bg-card border-2 border-border text-foreground px-8 py-4 rounded-full font-semibold hover:border-primary transition-colors">🎮 Direkt oyna</a>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto mt-20 grid sm:grid-cols-3 gap-4">
+    {% set cards = [
+      ('🧬','DNA','Tarif kitabı','bg-primary/10 text-primary'),
+      ('📨','mRNA','Haberci kopya','bg-secondary/10 text-secondary'),
+      ('🍳','Ribozom','Pişirme mutfağı','bg-accent/10 text-accent')
+    ] %}
+    {% for emoji, title, desc, color in cards %}
+    <div class="bg-card rounded-3xl p-6 shadow-soft border border-border hover:shadow-pop hover:-translate-y-1 transition-all animate-float" style="animation-delay: {{ loop.index0 * 0.5 }}s">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-3 {{ color }}">{{ emoji }}</div>
+      <h3 class="font-bold text-lg">{{ title }}</h3>
+      <p class="text-sm text-muted-foreground">{{ desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="px-6 pb-24">
+  <div class="max-w-4xl mx-auto bg-card rounded-3xl p-8 md:p-12 shadow-soft border border-border">
+    <h2 class="text-3xl md:text-4xl font-bold mb-3">Bu site nasıl işliyor?</h2>
+    <p class="text-muted-foreground mb-8">İki adımda hallediyoruz:</p>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="p-6 rounded-2xl bg-gradient-soft border border-border">
+        <div class="text-3xl mb-2">1️⃣</div>
+        <h3 class="font-bold text-xl mb-2">Önce öğren</h3>
+        <p class="text-muted-foreground text-sm">Anlatım sayfasında protein sentezini adım adım, mutfak örneğiyle anlatıyoruz.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-gradient-soft border border-border">
+        <div class="text-3xl mb-2">2️⃣</div>
+        <h3 class="font-bold text-xl mb-2">Sonra oyna</h3>
+        <p class="text-muted-foreground text-sm">Kodon eşleştirme oyununda öğrendiklerini dener, skorunu yükseltirsin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

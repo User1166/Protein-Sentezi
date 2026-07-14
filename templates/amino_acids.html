@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Amino Asitler — 20 standart{% endblock %}
+{% block content %}
+{% set group_style = {
+  'Apolar': 'bg-primary/10 text-primary',
+  'Polar': 'bg-secondary/15 text-secondary',
+  'Asidik': 'bg-destructive/10 text-destructive',
+  'Bazik': 'bg-accent/15 text-accent',
+  'Özel': 'bg-muted text-foreground/70'
+} %}
+
+<header class="px-6 pt-12 pb-6 text-center">
+  <span class="inline-block bg-card border border-border px-3 py-1 rounded-full text-xs font-semibold mb-4">📘 Referans tablosu</span>
+  <h1 class="text-4xl md:text-5xl font-bold mb-3">20 <span class="text-gradient">Amino Asit</span></h1>
+  <p class="text-muted-foreground max-w-xl mx-auto">Türkçe-İngilizce adlar, kısaltmalar, mRNA kodonları ve kimyasal grupları.</p>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 md:px-6 pb-16">
+  <div class="flex flex-wrap gap-2 justify-center mb-6 text-xs">
+    {% for g, cls in group_style.items() %}
+      <span class="px-3 py-1.5 rounded-full font-semibold {{ cls }}">{{ g }}</span>
+    {% endfor %}
+    <span class="px-3 py-1.5 rounded-full font-semibold bg-card border border-border">⭐ Esansiyel</span>
+  </div>
+
+  <div class="bg-card rounded-3xl shadow-pop border border-border overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-muted/50 text-left">
+          <tr>
+            <th class="p-3 font-bold">#</th>
+            <th class="p-3 font-bold">Türkçe</th>
+            <th class="p-3 font-bold">İngilizce</th>
+            <th class="p-3 font-bold text-center">3 harf</th>
+            <th class="p-3 font-bold text-center">1 harf</th>
+            <th class="p-3 font-bold">mRNA Kodonları</th>
+            <th class="p-3 font-bold">Grup</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in aas %}
+          <tr class="border-t border-border hover:bg-muted/30 transition-colors">
+            <td class="p-3 text-muted-foreground">{{ loop.index }}</td>
+            <td class="p-3 font-semibold">{{ a.tr }}{% if a.essential %} <span title="Esansiyel">⭐</span>{% endif %}</td>
+            <td class="p-3 text-muted-foreground">{{ a.name }}</td>
+            <td class="p-3 text-center font-mono font-bold text-primary">{{ a.three }}</td>
+            <td class="p-3 text-center font-mono font-bold">{{ a.one }}</td>
+            <td class="p-3">
+              <div class="flex flex-wrap gap-1">
+                {% for c in a.codons %}<span class="font-mono text-xs bg-muted px-1.5 py-0.5 rounded">{{ c }}</span>{% endfor %}
+              </div>
+            </td>
+            <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-semibold {{ group_style[a.group] }}">{{ a.group }}</span></td>
+          </tr>
+          {% endfor %}
+          <tr class="border-t border-border bg-destructive/5">
+            <td class="p-3 text-muted-foreground">—</td>
+            <td class="p-3 font-semibold">Dur (Stop)</td>
+            <td class="p-3 text-muted-foreground">Stop codon</td>
+            <td class="p-3 text-center font-mono">—</td>
+            <td class="p-3 text-center font-mono">*</td>
+            <td class="p-3"><div class="flex flex-wrap gap-1">
+              {% for c in ['UAA','UAG','UGA'] %}<span class="font-mono text-xs bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">{{ c }}</span>{% endfor %}
+            </div></td>
+            <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-semibold bg-destructive/10 text-destructive">Sonlandırma</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-6 grid sm:grid-cols-2 gap-4">
+    <div class="bg-card border border-border rounded-2xl p-5 text-sm">
+      <div class="font-bold mb-2">🔑 Hatırlatma</div>
+      <ul class="list-disc pl-5 space-y-1 text-muted-foreground">
+        <li><strong>AUG</strong> hem başlangıç kodonudur hem de Metiyonin'i kodlar.</li>
+        <li><strong>UAA, UAG, UGA</strong> stop kodonlarıdır, amino asit kodlamaz.</li>
+        <li>Toplam <strong>61</strong> amino asit kodonu + <strong>3</strong> stop = <strong>64</strong>.</li>
+      </ul>
+    </div>
+    <div class="bg-card border border-border rounded-2xl p-5 text-sm">
+      <div class="font-bold mb-2">⭐ Esansiyel amino asitler</div>
+      <p class="text-muted-foreground">His, İle, Lös, Liz, Met, Fen, Tre, Trp, Val.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 text-center">
+    <a href="{{ url_for('lesson') }}" class="text-primary font-semibold hover:underline">← Anlatıma dön</a>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Anlatım — Protein Sentezi{% endblock %}
+
+{% macro step(num, emoji, title, subtitle="") %}
+<div class="relative pl-14 pb-12 border-l-2 border-dashed border-border last:border-transparent last:pb-0">
+  <div class="absolute -left-6 top-0 w-12 h-12 rounded-2xl bg-gradient-hero text-primary-foreground flex items-center justify-center font-bold shadow-pop">{{ num }}</div>
+  <div class="bg-card rounded-3xl p-6 md:p-8 shadow-soft border border-border">
+    <h3 class="text-2xl font-bold mb-1 flex items-center gap-2">
+      <span class="text-3xl">{{ emoji }}</span>{{ title }}
+    </h3>
+    {% if subtitle %}<p class="text-xs text-muted-foreground mb-4 ml-11">{{ subtitle }}</p>{% endif %}
+    <div class="space-y-3 text-foreground/85 leading-relaxed mt-3">
+      {{ caller() }}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<header class="px-6 pt-12 pb-8 text-center">
+  <span class="inline-block bg-card border border-border px-3 py-1 rounded-full text-xs font-semibold mb-4">📘 12. Sınıf Biyoloji • Protein Sentezi</span>
+  <h1 class="text-4xl md:text-5xl font-bold mb-3">Protein <span class="text-gradient">Sentezi</span></h1>
+  <p class="text-muted-foreground max-w-xl mx-auto">Hücrenin protein üretim mekanizmasını adım adım, hem mutfak benzetmesiyle hem de teknik dilde, MEB 12. sınıf müfredatına uygun olarak öğreneceksin.</p>
+</header>
+
+<main class="max-w-3xl mx-auto px-6 py-8">
+  <div class="bg-card border border-border rounded-2xl p-5 mb-8 shadow-soft">
+    <div class="text-xs font-bold text-primary mb-3">📋 BU SAYFADA NELER VAR?</div>
+    <ul class="text-sm space-y-1 text-muted-foreground grid sm:grid-cols-2 gap-x-4">
+      <li>1. Protein nedir, niye gerekli?</li>
+      <li>2. Amino asitler ve peptit bağı</li>
+      <li>3. Sürecin genel şeması</li>
+      <li>4. Genetik şifre ve kodon</li>
+      <li>5. Transkripsiyon (DNA → mRNA)</li>
+      <li>6. mRNA işlenmesi (olgunlaşma)</li>
+      <li>7. Translasyon: başlama</li>
+      <li>8. Translasyon: uzama</li>
+      <li>9. Translasyon: sonlanma</li>
+      <li>10. Polizom ve hız</li>
+    </ul>
+  </div>
+
+  {% call step("1","🧱","Protein Nedir, Niye Bu Kadar Önemli?") %}
+    <p><strong>Protein</strong>, amino asitlerin peptit bağlarıyla bağlanması sonucu oluşan, canlılığın temel yapı ve görev molekülüdür. Vücudunun kuru ağırlığının yaklaşık <strong>%50'si proteindir</strong>. Saçın, tırnağın, kasların, hatta sindirim enzimleri de birer proteindir.</p>
+    <p>Proteinlerin başlıca görevleri:</p>
+    <ul class="list-disc pl-6 space-y-1 text-sm">
+      <li><strong>Yapısal:</strong> Kollajen (deri, kemik), keratin (saç, tırnak), aktin/miyozin (kas).</li>
+      <li><strong>Enzim:</strong> Tüm metabolik tepkimeleri hızlandırır (amilaz, pepsin, DNA polimeraz...).</li>
+      <li><strong>Taşıma:</strong> Hemoglobin (O₂), albumin, zar taşıyıcı proteinler.</li>
+      <li><strong>Hormon:</strong> İnsülin, glukagon, büyüme hormonu.</li>
+      <li><strong>Savunma:</strong> Antikorlar (immünoglobulinler).</li>
+      <li><strong>Hareket:</strong> Kas kasılması, kirpik-kamçı hareketi.</li>
+      <li><strong>Düzenleyici:</strong> Gen ifadesini kontrol eden transkripsiyon faktörleri.</li>
+    </ul>
+    <div class="bg-primary/10 border-l-4 border-primary p-4 rounded-r-xl text-sm">
+      <strong>Önemli:</strong> Her hücre kendi proteinini kendisi üretir. Yediğimiz proteinler sindirim sırasında <strong>amino asitlere</strong> parçalanır; sonra hücrelerimiz bu amino asitleri <em>kendi DNA'mızdaki şifreye göre</em> yeniden birleştirerek <strong>bize özgü proteinleri</strong> sentezler.
+    </div>
+  {% endcall %}
+
+  {% call step("2","🔗","Amino Asitler ve Peptit Bağı") %}
+    <p><strong>Amino asit</strong>, proteinin yapı taşıdır. Doğada protein yapımında kullanılan <strong>20 çeşit amino asit</strong> vardır. Her amino asit, merkezdeki <strong>C (α-karbon) atomuna bağlı dört parçadan</strong> oluşur:</p>
+    <ul class="list-disc pl-6 space-y-1 text-sm">
+      <li>C atomuna bağlı bir <strong>H atomu</strong></li>
+      <li>Bir <strong>amino grubu</strong> (–NH₂)</li>
+      <li>Bir <strong>karboksil grubu</strong> (–COOH)</li>
+      <li>Bir <strong>R grubu</strong> (yan zincir — amino asitleri birbirinden ayıran kısım)</li>
+    </ul>
+    <p>İki amino asit yan yana geldiğinde, birinin –COOH'undan bir –OH, diğerinin –NH₂'sinden bir –H ayrılır ve <strong>1 su molekülü</strong> açığa çıkar. Geriye kalan bağa <strong>peptit bağı</strong> (–CO–NH–) denir.</p>
+    <div class="grid grid-cols-3 gap-2 text-xs text-center my-3">
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="font-bold text-primary">2 amino asit</div><div>Dipeptit + 1 H₂O</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="font-bold text-primary">3 amino asit</div><div>Tripeptit + 2 H₂O</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="font-bold text-primary">n amino asit</div><div>Polipeptit + (n-1) H₂O</div></div>
+    </div>
+    <p>Çok sayıda amino asit zincirine <strong>polipeptit</strong> denir. Bir veya birkaç polipeptit zinciri uygun şekle katlandığında <strong>protein</strong> olur.</p>
+    <div class="bg-primary/10 border-l-4 border-primary p-4 rounded-r-xl text-sm">
+      <strong>Esansiyel amino asitler:</strong> İnsan vücudunun sentezleyemediği, mutlaka besinle alınması gereken 8 amino asit vardır.
+    </div>
+  {% endcall %}
+
+  {% call step("3","🗺️","Protein Sentezinin Genel Şeması") %}
+    <p>Protein sentezi, hücrenin DNA'sındaki bilgiyi kullanıp amino asitleri doğru sırayla dizmesi olayıdır.</p>
+    <div class="bg-gradient-soft p-5 rounded-2xl border border-border my-3">
+      <div class="font-mono text-center text-sm md:text-base font-bold">
+        DNA <span class="text-primary">— transkripsiyon →</span> mRNA <span class="text-primary">— translasyon →</span> Protein
+      </div>
+      <div class="text-xs text-muted-foreground text-center mt-2">Bu akışa <strong>"Moleküler Biyolojinin Merkezi Dogması"</strong> denir.</div>
+    </div>
+    <p>Mutfak benzetmesi:</p>
+    <ul class="list-disc pl-6 space-y-1 text-sm">
+      <li><strong>DNA</strong> = çekirdekteki dev tarif kitabı</li>
+      <li><strong>mRNA</strong> = tek bir tarifin fotokopisi</li>
+      <li><strong>Ribozom</strong> = tarifin pişirildiği mutfak</li>
+      <li><strong>tRNA</strong> = malzemeleri taşıyan kuryeler 🚕</li>
+      <li><strong>Amino asitler</strong> = malzemeler</li>
+      <li><strong>Protein</strong> = pişmiş yemek 🍝</li>
+    </ul>
+  {% endcall %}
+
+  {% call step("4","🔤","Genetik Şifre ve Kodon") %}
+    <p>mRNA üzerindeki <strong>üç ardışık nükleotide</strong> bir <strong>kodon</strong> denir. <strong>4³ = 64 farklı kodon</strong> vardır.</p>
+    <div class="grid grid-cols-3 gap-2 text-center text-sm my-3">
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="text-2xl font-bold text-primary">61</div><div class="text-xs text-muted-foreground">amino asit kodonu</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="text-2xl font-bold text-primary">3</div><div class="text-xs text-muted-foreground">stop (UAA, UAG, UGA)</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><div class="text-2xl font-bold text-primary">1</div><div class="text-xs text-muted-foreground">başlangıç (AUG = Met)</div></div>
+    </div>
+    <ul class="list-disc pl-6 space-y-1 text-sm">
+      <li><strong>Üçlü:</strong> 3 nükleotid → 1 amino asit.</li>
+      <li><strong>Evrensel:</strong> Tüm canlılarda aynı.</li>
+      <li><strong>Dejenere:</strong> Bir amino asit birden fazla kodonla kodlanabilir.</li>
+      <li><strong>Özgül:</strong> Bir kodon yalnız bir amino asidi gösterir.</li>
+      <li><strong>Örtüşmez, virgülsüz, süreksizdir.</strong></li>
+    </ul>
+    <div class="bg-accent/10 border-l-4 border-accent p-4 rounded-r-xl text-sm">
+      <strong>Önemli:</strong> Kodon (mRNA), Antikodon (tRNA), Şifre/triplet (DNA).
+    </div>
+  {% endcall %}
+
+  {% call step("5","✍️","Transkripsiyon: DNA → mRNA") %}
+    <p><strong>RNA polimeraz</strong> promotör bölgeye bağlanır, DNA açılır, kalıp iplik kullanılarak komplementer mRNA sentezlenir (5'→3'). RNA'da <strong>T yerine U</strong> kullanılır.</p>
+    <div class="grid grid-cols-4 gap-2 font-mono text-center text-xs my-2">
+      <div class="bg-muted p-2 rounded">DNA A → RNA U</div>
+      <div class="bg-muted p-2 rounded">DNA T → RNA A</div>
+      <div class="bg-muted p-2 rounded">DNA G → RNA C</div>
+      <div class="bg-muted p-2 rounded">DNA C → RNA G</div>
+    </div>
+    <div class="bg-card border border-border rounded-xl p-4 my-3 text-sm">
+      <div class="font-semibold mb-2">📌 Mini örnek:</div>
+      <div class="font-mono space-y-1">
+        <div>DNA kalıp:  3'– T A C G G A C T T –5'</div>
+        <div>mRNA      :  5'– A U G C C U G A A –3'</div>
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call step("6","✂️","mRNA Olgunlaşması (Sadece Ökaryotlarda)") %}
+    <p>Ökaryotlarda yeni sentezlenen <strong>pre-mRNA</strong> üç işlemden geçer:</p>
+    <ul class="list-disc pl-6 space-y-2 text-sm">
+      <li><strong>5' kep</strong> eklenmesi (ribozom için işaret).</li>
+      <li><strong>Poli-A kuyruğu</strong> 3' uca eklenir (mRNA korunur).</li>
+      <li><strong>Splicing:</strong> intronlar çıkarılır, ekzonlar birleştirilir.</li>
+    </ul>
+  {% endcall %}
+
+  {% call step("7","🚦","Translasyon — 1. Aşama: Başlama") %}
+    <p>Ribozomun küçük alt birimi mRNA'nın 5' kepine bağlanır, ilk <strong>AUG</strong> bulunur, <strong>Met-tRNA</strong> (antikodon UAC) gelir, büyük alt birim eklenir. Ribozomda 3 bölge vardır:</p>
+    <div class="grid grid-cols-3 gap-2 text-center text-xs my-3">
+      <div class="bg-muted/50 p-3 rounded-xl"><strong class="text-primary">A bölgesi</strong><div>Yeni gelen tRNA</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><strong class="text-primary">P bölgesi</strong><div>Zinciri tutan tRNA</div></div>
+      <div class="bg-muted/50 p-3 rounded-xl"><strong class="text-primary">E bölgesi</strong><div>Boşalan tRNA çıkışı</div></div>
+    </div>
+  {% endcall %}
+
+  {% call step("8","🔁","Translasyon — 2. Aşama: Uzama") %}
+    <ol class="list-decimal pl-6 space-y-2 text-sm">
+      <li><strong>Kodon tanıma:</strong> A bölgesindeki kodona uygun antikodonlu tRNA gelir.</li>
+      <li><strong>Peptit bağı:</strong> P'deki amino asit A'dakine aktarılır, <strong>1 H₂O</strong> açığa çıkar.</li>
+      <li><strong>Translokasyon:</strong> Ribozom 1 kodon kayar; P→E, A→P olur.</li>
+    </ol>
+    <p class="text-sm">Her kodon = 1 amino asit = 1 peptit bağı = 1 H₂O.</p>
+  {% endcall %}
+
+  {% call step("9","🛑","Translasyon — 3. Aşama: Sonlanma") %}
+    <p>Stop kodonuna (<span class="font-mono">UAA, UAG, UGA</span>) gelinince <strong>salıverme faktörleri</strong> A bölgesine girer, polipeptit serbest kalır, ribozom alt birimleri ayrılır.</p>
+  {% endcall %}
+
+  {% call step("10","⚡","Polizom: Aynı Anda Çok Sayıda Üretim") %}
+    <p>Bir mRNA üzerinde aynı anda birden çok ribozom çalışabilir; bu yapıya <strong>polizom</strong> denir. Tek bir mRNA'dan kısa sürede çok sayıda özdeş protein üretilir.</p>
+  {% endcall %}
+
+  <div class="mt-8 bg-gradient-hero rounded-3xl p-8 md:p-10 text-center text-primary-foreground shadow-pop">
+    <div class="text-5xl mb-3">🎮</div>
+    <h2 class="text-3xl font-bold mb-2">Hadi sınayalım!</h2>
+    <p class="opacity-90 mb-6 max-w-md mx-auto">5 farklı oyun seni bekliyor: kodon eşleştirme, transkripsiyon, replikasyon, antikodon bulma, adım sıralama.</p>
+    <a href="{{ url_for('games') }}" class="inline-block bg-card text-foreground px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-soft">Oyunlara git →</a>
+  </div>
+</main>
+{% endblock %}

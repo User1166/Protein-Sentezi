@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Oyunlar — Protein Sentezi{% endblock %}
+{% block content %}
+<header class="px-6 pt-12 pb-6 text-center">
+  <span class="inline-block bg-card border border-border px-3 py-1 rounded-full text-xs font-semibold mb-4">🎮 Mini oyun arşivi</span>
+  <h1 class="text-4xl md:text-5xl font-bold mb-3">Oyna ve <span class="text-gradient">öğren</span></h1>
+  <p class="text-muted-foreground max-w-lg mx-auto">5 farklı oyun var. Kolaydan zora doğru ilerleyerek protein sentezini kavrayabilirsin.</p>
+</header>
+
+<main class="max-w-3xl mx-auto px-6 py-6">
+  <div id="game-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8"></div>
+  <div id="game-desc" class="mb-4 text-sm text-muted-foreground text-center"></div>
+  <div id="game-container"></div>
+
+  <div class="mt-8 bg-card border border-border rounded-2xl p-6 text-sm text-muted-foreground">
+    <strong class="text-foreground">İpucu:</strong> Takıldıysan
+    <a href="{{ url_for('lesson') }}" class="text-primary font-semibold hover:underline">anlatımı tekrar oku</a>.
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/games.js') }}"></script>
+{% endblock %}
