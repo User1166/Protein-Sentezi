@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Öğren - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div class="learn-section">
+    <div class="container">
+        <h1>Protein Sentezini Öğren</h1>
+        <p class="lead">Canlılıklarda proteinlerin nasıl yapıldığını adım adım keşfedin</p>
+
+        <div class="learning-modules">
+            <!-- Modul 1: DNA -->
+            <div class="module-card" onclick="toggleModule(this)">
+                <div class="module-header">
+                    <div class="module-icon">🧬</div>
+                    <div class="module-title">
+                        <h2>Modul 1: DNA (Deoksiribonükleik Asit)</h2>
+                        <p class="difficulty">Başlangıç Seviyesi</p>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="module-content" style="display: none;">
+                    <h3>DNA Nedir?</h3>
+                    <p>DNA, tüm canlıların genetik bilgilerini taşıyan bir moleküldür. İkili sarmal yapısı vardır ve dört nükleobazdan oluşur:</p>
+                    <ul>
+                        <li><strong>Adenin (A)</strong> - Purin bazı</li>
+                        <li><strong>Guanin (G)</strong> - Purin bazı</li>
+                        <li><strong>Sitosin (C)</strong> - Pirimidin bazı</li>
+                        <li><strong>Timin (T)</strong> - Pirimidin bazı</li>
+                    </ul>
+                    
+                    <h3>DNA'nın Yapısı</h3>
+                    <ul>
+                        <li>İkili sarmal (Double helix)</li>
+                        <li>Şeker-fosfat omurga</li>
+                        <li>Bazlar arasında hidrojen bağları</li>
+                        <li>Baz eşleştirme kuralları: A-T (2 bağ), G-C (3 bağ)</li>
+                    </ul>
+
+                    <h3>DNA'nın Görevleri</h3>
+                    <p>DNA aşağıdaki görevleri yerine getirir:</p>
+                    <ul>
+                        <li>Genetik bilgiyi taşır ve saklar</li>
+                        <li>Hücre bölünmesi sırasında replikasyona uğrar</li>
+                        <li>Protein sentezinin kodlarını içerir</li>
+                        <li>Canlının özelliklerini belirler</li>
+                    </ul>
+
+                    <div class="quick-quiz">
+                        <h4>Hızlı Test</h4>
+                        <p>DNA'daki baz çiftlerinin sayısı 100 ise, kaç Adenin bazı vardır?</p>
+                        <div class="quiz-options">
+                            <button onclick="checkAnswer(this)">25</button>
+                            <button onclick="checkAnswer(this)">50</button>
+                            <button onclick="checkAnswer(this)">75</button>
+                        </div>
+                    </div>
+
+                    <a href="/quiz?topic=DNA" class="module-btn">DNA Quizi Yap</a>
+                </div>
+            </div>
+
+            <!-- Modul 2: Transkripsiyoni -->
+            <div class="module-card" onclick="toggleModule(this)">
+                <div class="module-header">
+                    <div class="module-icon">📝</div>
+                    <div class="module-title">
+                        <h2>Modul 2: Transkripsiyoni (DNA → RNA)</h2>
+                        <p class="difficulty">Orta Seviye</p>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="module-content" style="display: none;">
+                    <h3>Transkripsiyoni Nedir?</h3>
+                    <p>Transkripsiyoni, DNA'daki genetik bilginin mRNA (messenger RNA) kopyası oluşturulması işlemidir. Bu, protein sentezinin ilk aşamasıdır.</p>
+
+                    <h3>Transkripsiyonun Aşamaları</h3>
+                    <ol>
+                        <li><strong>Başlatma:</strong> RNA polimeraz enzimi DNA'nın promotör bölgesine bağlanır</li>
+                        <li><strong>Uzama:</strong> RNA polimeraz DNA şeridini takip ederek mRNA sentezlenir</li>
+                        <li><strong>Sonlandırma:</strong> Sonlandırıcı sinyale ulaşıldığında transkripsiyoni durur</li>
+                    </ol>
+
+                    <h3>mRNA Nedir?</h3>
+                    <p>mRNA (messenger RNA), DNA'nın kopyası gibi davranır ve hücre çekirdeğinden ribozoma taşınır.</p>
+                    <ul>
+                        <li>DNA'da T (timin) vardır, mRNA'da U (urasel) vardır</li>
+                        <li>DNA çift sarmaldır, mRNA tek şarmaldır</li>
+                        <li>mRNA kısa ömürlü bir moleküldür</li>
+                    </ul>
+
+                    <div class="quick-quiz">
+                        <h4>Hızlı Test</h4>
+                        <p>DNA'da AGATC dizisi varsa, mRNA'da ne yazılır?</p>
+                        <div class="quiz-options">
+                            <button onclick="checkAnswer(this)">AGATC</button>
+                            <button onclick="checkAnswer(this)">TCUAG</button>
+                            <button onclick="checkAnswer(this)">UCUAG</button>
+                        </div>
+                    </div>
+
+                    <a href="/game/transcription" class="module-btn">Transkripsiyoni Oyunu</a>
+                </div>
+            </div>
+
+            <!-- Modul 3: mRNA ve Kodonlar -->
+            <div class="module-card" onclick="toggleModule(this)">
+                <div class="module-header">
+                    <div class="module-icon">🔤</div>
+                    <div class="module-title">
+                        <h2>Modul 3: mRNA ve Kodonlar</h2>
+                        <p class="difficulty">Orta Seviye</p>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="module-content" style="display: none;">
+                    <h3>Kodon Nedir?</h3>
+                    <p>Kodon, mRNA üzerindeki 3 nükleotid dizisidirve belirli bir amino asiti kodlar.</p>
+
+                    <h3>Kodon Çeşitleri</h3>
+                    <ul>
+                        <li><strong>Anlamlandırıcı kodonlar:</strong> Amino asitleri kodlar (61 kodon)</li>
+                        <li><strong>Başlangıç kodonu:</strong> AUG (Metiyonin kodlar ve translasyonu başlatır)</li>
+                        <li><strong>Sonlandırma kodonları:</strong> UAA, UAG, UGA (translasyonu sonlandırır)</li>
+                    </ul>
+
+                    <h3>Genetik Kod Nedir?</h3>
+                    <p>Genetik kod, kodonların amino asitlere karşılığının belirlenmesidir. Bu kod bütün canlılarda aynıdır!</p>
+                    <p><em>Evrensellik:</em> Tüm canlılarda aynı genetik kod kullanılması, ortak atadan gelişme kanıtıdır.</p>
+
+                    <a href="/quiz?topic=mRNA" class="module-btn">mRNA Quizi Yap</a>
+                </div>
+            </div>
+
+            <!-- Modul 4: Translasyon -->
+            <div class="module-card" onclick="toggleModule(this)">
+                <div class="module-header">
+                    <div class="module-icon">🧩</div>
+                    <div class="module-title">
+                        <h2>Modul 4: Translasyon (mRNA → Protein)</h2>
+                        <p class="difficulty">İleri Seviye</p>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="module-content" style="display: none;">
+                    <h3>Translasyon Nedir?</h3>
+                    <p>Translasyon, ribozomda mRNA'nın okunması ve amino asit zincirinin sentezlenmesidir. Protein sentezinin son aşamasıdır.</p>
+
+                    <h3>Translasyonun Aşamaları</h3>
+                    <ol>
+                        <li><strong>Başlatma:</strong> Ribozom, mRNA'nın başlangıç kodonuna (AUG) bağlanır</li>
+                        <li><strong>Uzama:</strong> tRNA'lar mRNA'daki kodonları tanıyarak amino asitleri getirirler</li>
+                        <li><strong>Sonlandırma:</strong> Sonlandırma kodonuna ulaşıldığında protein sentezi durur</li>
+                    </ol>
+
+                    <h3>tRNA'nın Rolü</h3>
+                    <ul>
+                        <li>tRNA (transfer RNA), mRNA ve proteinleri bağlayan ara aşama</li>
+                        <li>Her tRNA belirli bir amino asiti taşır</li>
+                        <li>tRNA'nın antikodon bölgesi, mRNA'nın kodonuyla eşleşir</li>
+                    </ul>
+
+                    <h3>Ribozom Nedir?</h3>
+                    <ul>
+                        <li>rRNA (ribosomal RNA) ve proteinlerden oluşur</li>
+                        <li>Protein sentezinin meydanı</li>
+                        <li>Prokariyotlarda 70S, ökariyotlarda 80S</li>
+                    </ul>
+
+                    <a href="/game/translation" class="module-btn">Translasyon Oyunu</a>
+                </div>
+            </div>
+
+            <!-- Modul 5: Protein Yapısı -->
+            <div class="module-card" onclick="toggleModule(this)">
+                <div class="module-header">
+                    <div class="module-icon">🏗️</div>
+                    <div class="module-title">
+                        <h2>Modul 5: Protein Yapısı ve İşlevleri</h2>
+                        <p class="difficulty">İleri Seviye</p>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="module-content" style="display: none;">
+                    <h3>Amino Asitler Nedir?</h3>
+                    <p>Amino asitler, proteinlerin yapı taşlarıdır. Glikoz gibi protein da organik bir moleküldür.</p>
+                    <ul>
+                        <li>20 çeşit amino asit vardır</li>
+                        <li>Peptit bağıyla birbirine bağlanırlar</li>
+                        <li>Amino asit dizisinin sırası proteininin işlevini belirler</li>
+                    </ul>
+
+                    <h3>Protein Yapısının Seviyeleri</h3>
+                    <ol>
+                        <li><strong>Primer Yapı:</strong> Amino asitlerin dizilişi</li>
+                        <li><strong>Sekonder Yapı:</strong> Alfa-sarmal ve beta-yapraklar</li>
+                        <li><strong>Tertsier Yapı:</strong> Protein'in 3D şekli</li>
+                        <li><strong>Kuarterner Yapı:</strong> Birden çok polipeptit zincirinin birleşmesi</li>
+                    </ol>
+
+                    <h3>Proteinlerin Görevleri</h3>
+                    <ul>
+                        <li><strong>Katalitik:</strong> Enzimler kimyasal reaksiyonları hızlandırır</li>
+                        <li><strong>Taşıyıcı:</strong> Hemoglobin oksijen taşır</li>
+                        <li><strong>Koruyucu:</strong> Antikorlar hastalıklara karşı koruma sağlar</li>
+                        <li><strong>Yapısal:</strong> Kolajen deri ve kemikleri oluşturur</li>
+                        <li><strong>Hareket:</strong> Aktin ve miyozin kas kasılmasını sağlar</li>
+                    </ul>
+
+                    <a href="/game/folding" class="module-btn">Protein Katlama Oyunu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleModule(element) {
+    const content = element.querySelector('.module-content');
+    const icon = element.querySelector('.expand-icon');
+    const isOpen = content.style.display !== 'none';
+    
+    document.querySelectorAll('.module-card').forEach(card => {
+        card.querySelector('.module-content').style.display = 'none';
+        card.querySelector('.expand-icon').style.transform = 'rotate(0deg)';
+        card.classList.remove('open');
+    });
+    
+    if (!isOpen) {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
+        element.classList.add('open');
+    }
+}
+
+function checkAnswer(button) {
+    const correct = button.textContent === '50'; // Örnek doğru cevap
+    if (correct) {
+        button.style.backgroundColor = '#4CAF50';
+        button.style.color = 'white';
+        alert('Doğru! +10 puan kazandın!');
+    } else {
+        button.style.backgroundColor = '#f44336';
+        button.style.color = 'white';
+        alert('Yanlış. Tekrar deneyin!');
+    }
+}
+</script>
+{% endblock %}

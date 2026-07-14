@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Liderlik Tablosu - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div class="leaderboard-section">
+    <div class="container">
+        <h1>🏆 Liderlik Tablosu</h1>
+        <p class="lead">En başarılı oyuncuları gör ve onlara karşı rekabet et!</p>
+
+        <div class="leaderboard-content">
+            <div id="leaderboard-table" class="leaderboard-table">
+                <!-- Tablo dinamik olarak yüklenecek -->
+            </div>
+        </div>
+
+        <div class="personal-stats">
+            <h2>Kişisel İstatistiklerin</h2>
+            <div id="personal-stats-content" class="stats-grid">
+                <!-- İstatistikler dinamik olarak yüklenecek -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Liderlik tablosunu yükle
+function loadLeaderboard() {
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    const currentPlayerName = localStorage.getItem('playerName') || 'Ziyaretçi';
+    
+    if (leaderboard.length === 0) {
+        document.getElementById('leaderboard-table').innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #999;">
+                <p style="font-size: 18px;">📊 Henüz liderlik tablosu verisi yok.</p>
+                <p>Oyunları oynayarak liderlik tablosuna katıl!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Sıralamayı puana göre düzenle (büyükten küçüğe)
+    const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
+    
+    const html = `
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background: #4CAF50; color: white;">
+                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Sıra</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Oyuncu Adı</th>
+                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Toplam Puan</th>
+                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Tarih</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${sorted.map((item, index) => `
+                    <tr style="background: ${index < 3 ? (index === 0 ? '#FFD70033' : index === 1 ? '#C0C0C033' : '#CD7F3233') : currentPlayerName === item.name ? '#E3F2FD' : 'white'}; border: 1px solid #ddd;">
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd;">
+                            ${index === 0 ? '🥇 1.' : index === 1 ? '🥈 2.' : index === 2 ? '🥉 3.' : (index + 1) + '.'}
+                        </td>
+                        <td style="padding: 12px; text-align: left; border: 1px solid #ddd; font-weight: bold;">
+                            ${item.name}${currentPlayerName === item.name ? ' <span style="color: #2196F3;"> (Sen)</span>' : ''}
+                        </td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd; color: #4CAF50; font-weight: bold; font-size: 16px;">${item.score}</td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd; color: #666; font-size: 12px;">${item.date || new Date().toLocaleDateString('tr-TR')}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    document.getElementById('leaderboard-table').innerHTML = html;
+    
+    // Kişisel istatistikleri göster
+    const personalStats = sorted.find(item => item.name === currentPlayerName);
+    if (personalStats) {
+        const personalRank = sorted.indexOf(personalStats) + 1;
+        document.getElementById('personal-stats-content').innerHTML = `
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #333; margin: 0 0 10px 0;">👤 ${currentPlayerName}</h3>
+                    <div style="font-size: 36px; font-weight: bold; color: #2196F3;">#${personalRank}</div>
+                    <div style="color: #666; margin-top: 10px;">Sıralamada ${personalRank}. Sırada</div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div style="text-align: center; padding: 15px; background: #E3F2FD; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #2196F3;">${personalStats.score}</div>
+                            <div style="color: #666; margin-top: 5px;">Toplam Puan</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #F3E5F5; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #9C27B0;">${personalStats.games || 0}</div>
+                            <div style="color: #666; margin-top: 5px;">Oyun Sayısı</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Sayfa yüklendiğinde liderlik tablosunu getir
+document.addEventListener('DOMContentLoaded', function() {
+    loadLeaderboard();
+});
+</script>
+
+<style>
+    .leaderboard-section {
+        padding: 40px 20px;
+    }
+    
+    .leaderboard-section h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 32px;
+    }
+    
+    .lead {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }
+    
+    .leaderboard-table {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    
+    .leaderboard-table table {
+        width: 100%;
+    }
+    
+    .personal-stats {
+        margin-top: 40px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .personal-stats h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .stat-card {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border-left: 4px solid #4CAF50;
+    }
+    
+    .stat-card h3 {
+        color: #666;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #4CAF50;
+    }
+</style>
+
+{% endblock %}

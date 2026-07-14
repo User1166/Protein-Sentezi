@@ -1,0 +1,530 @@
+{% extends "base.html" %}
+
+{% block title %}Protein Oluşturucu Oyunu - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div class="game-section">
+    <div class="container">
+        
+        <!-- Oyuncu Adı Seçim Ekranı -->
+        <div id="nameScreen" style="background: white; padding: 40px; border-radius: 10px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333; margin-bottom: 20px;">🧬 Protein Oluşturucu Oyununa Hoşgeldiniz!</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 16px;">Lütfen adınızı girin veya seçin:</p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <input type="text" id="playerName" placeholder="Adınızı yazın..." style="padding: 10px 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 5px; width: 250px;" maxlength="15">
+                <button onclick="startGame()" style="padding: 10px 30px; background: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">Başla</button>
+            </div>
+            <p style="color: #999; font-size: 12px;">💡 İpucu: Rastgele amino asit seçin ve hangi proteini oluşturduğunuzu öğrenin!</p>
+        </div>
+
+        <!-- Oyun Ekranı (gizli başlangıçta) -->
+        <div id="gameScreen" style="display: none;">
+            
+            <!-- Üst Bar -->
+            <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h2 style="margin: 0; color: #333;">🧬 Protein Oluşturucu</h2>
+                <div style="font-size: 18px; font-weight: bold; color: #2196F3;">
+                    👤 <span id="displayName"></span>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 14px; color: #666;">Puan</div>
+                    <div style="font-size: 28px; font-weight: bold; color: #4CAF50;" id="scoreDisplay">0</div>
+                </div>
+            </div>
+
+            <!-- Talimatlar -->
+            <div style="background: #E3F2FD; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+                <strong>📖 Oyun Nasıl Oynanır:</strong><br>
+                1️⃣ Sağ taraftan <strong>rastgele amino asitler seçin</strong><br>
+                2️⃣ <strong>Protein oluşturmak için sırada ekleyin</strong><br>
+                3️⃣ Websitesi oluşturduğunuz <strong>proteini tanıyacak ve gösterecek</strong><br>
+                4️⃣ Doğru protein oluşturduğunuz için <strong>puan kazanın</strong>
+            </div>
+
+            <!-- Ana Oyun Alanı -->
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px;">
+                
+                <!-- Protein Oluşturma Bölümü -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: #333;">Oluşturduğunuz Protein Zinciri</h3>
+                    
+                    <div id="proteinChain" style="background: #f5f5f5; padding: 15px; border-radius: 5px; min-height: 60px; margin-bottom: 15px; border: 2px dashed #ccc; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                        <span style="color: #999;">Buraya amino asitler eklenir...</span>
+                    </div>
+
+                    <!-- Klavyeyle Amino Asit Girişi -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">⌨️ Veya Amino Asit Kodları Yazın:</label>
+                        <input type="text" id="aminoInput" placeholder="Örn: GIVEQ (büyük harfle)" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #2196F3; border-radius: 5px; font-family: monospace; letter-spacing: 2px; text-transform: uppercase;" maxlength="30">
+                        <small style="color: #666; display: block; margin-top: 5px;">Amino asit kodlarını yazın, her biri otomatik eklenir (A, G, V, L, I, P, F, W, M, C, S, T, N, Q, D, E, K, R, H, Y)</small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <button onclick="game.clearChain()" style="padding: 10px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🔄 Temizle</button>
+                        <button onclick="game.identifyProtein()" id="identifyBtn" style="padding: 10px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; disabled; opacity: 0.5;">🔍 Proteini Tanı</button>
+                    </div>
+
+                    <!-- Sonuç Bölümü -->
+                    <div id="resultBox" style="display: none; background: #E8F5E9; padding: 15px; border-radius: 5px; border-left: 4px solid #4CAF50;">
+                        <h4 style="color: #2E7D32; margin-top: 0;">🎉 Tanınan Protein:</h4>
+                        <p style="font-size: 16px; font-weight: bold; color: #1B5E20; margin-bottom: 5px;" id="proteinName"></p>
+                        <p style="color: #555; font-size: 14px; margin: 0;" id="proteinDesc"></p>
+                    </div>
+                </div>
+
+                <!-- Sağ Panel - Amino Asitler -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: fit-content;">
+                    <h3 style="margin-top: 0; color: #333;">Amino Asitler</h3>
+                    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                        <strong id="chainLength">0</strong> amino asit seçildi
+                    </p>
+                    
+                    <div id="aminoList" style="display: grid; grid-template-columns: 1fr; gap: 8px;"></div>
+
+                    <!-- İstatistik -->
+                    <div style="margin-top: 20px; padding: 15px; background: #FFF3E0; border-radius: 5px; border-left: 4px solid #FF9800;">
+                        <strong style="color: #E65100;">Denemeler</strong><br>
+                        <span style="color: #F57C00; font-size: 14px;" id="attempts">0</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Proteini tanıyıp tanımadığını kontrol et
+    let currentProteinIdentified = false;
+
+    // Gerçek Proteinler Veri Tabanı
+    const PROTEINS_DATABASE = [
+        {
+            name: 'İnsulin',
+            description: 'Kan şeker seviyesini düzenleyen hormon',
+            chain: 'GIVEQCCTSICSLYQLENYCN',
+            knownFor: 'Diyabet tedavisi'
+        },
+        {
+            name: 'Hemoglobin',
+            description: 'Kanda oksijen taşıyan protein',
+            chain: 'MVLSPADKTNVKAAWGKVG',
+            knownFor: 'Oksijen taşıyıcı'
+        },
+        {
+            name: 'Kollajen',
+            description: 'Cilt, kemik ve bağ dokularında bulunan protein',
+            chain: 'GLYGGLGSLGSGLVGLSGGLGSL',
+            knownFor: 'Yapısal destek'
+        },
+        {
+            name: 'Amilaz',
+            description: 'Nişastayı şekerlere dönüştüren enzim',
+            chain: 'GGPLGQVNQLTGSSMPIMP',
+            knownFor: 'Sindirimi yardımcı'
+        },
+        {
+            name: 'Myoglobin',
+            description: 'Kaslarda oksijen depolayan protein',
+            chain: 'MVLSEGEWQLVLHVWAKEA',
+            knownFor: 'Kas oksijeni'
+        },
+        {
+            name: 'Keratin',
+            description: 'Saç, tırnak ve ciltte bulunan protein',
+            chain: 'MSTLVLSWVQLIVVFASLPS',
+            knownFor: 'Saç ve tırnak'
+        },
+        {
+            name: 'Elastin',
+            description: 'Elastik dokuların temel proteini',
+            chain: 'MGLGLGLVALVLGLPPLGLG',
+            knownFor: 'Esneklik sağlamak'
+        },
+        {
+            name: 'Tromboksan',
+            description: 'Kan pıhtılaşmasını sağlayan protein',
+            chain: 'MGRGPLGLFLAAGLGAACLGA',
+            knownFor: 'Kan pıhtılaşması'
+        }
+    ];
+
+    // Amino Asit Kodu Dönüştürme
+    const AMINO_ACID_FULL = {
+        'G': 'Glisin', 'A': 'Alanin', 'V': 'Valin', 'L': 'Lösin',
+        'I': 'İzolösin', 'P': 'Prolin', 'F': 'Fenilalanin', 'W': 'Triptofan',
+        'M': 'Metiyonin', 'C': 'Sistein', 'S': 'Serin', 'T': 'Treonin',
+        'N': 'Asparagin', 'Q': 'Glutamin', 'D': 'Aspartat', 'E': 'Glutamat',
+        'K': 'Lizin', 'R': 'Arginin', 'H': 'Histidin', 'Y': 'Tirosin'
+    };
+
+    class ProteinBuilderGame {
+        constructor() {
+            this.playerName = '';
+            this.proteinChain = '';
+            this.score = 0;
+            this.attempts = 0;
+            this.identifiedProteins = [];
+            
+            this.setupUI();
+        }
+
+        setupUI() {
+            const list = document.getElementById('aminoList');
+            const aminoCodes = Object.keys(AMINO_ACID_FULL);
+            
+            aminoCodes.forEach(code => {
+                const div = document.createElement('div');
+                div.className = 'amino-button';
+                div.innerHTML = `<strong>${code}</strong><br><small>${AMINO_ACID_FULL[code]}</small>`;
+                div.style.cssText = `
+                    padding: 10px;
+                    text-align: center;
+                    background: #E3F2FD;
+                    border: 2px solid #2196F3;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 13px;
+                    transition: all 0.2s;
+                    user-select: none;
+                `;
+                div.onmouseover = () => { 
+                    div.style.background = '#2196F3'; 
+                    div.style.color = 'white';
+                };
+                div.onmouseout = () => { 
+                    div.style.background = '#E3F2FD'; 
+                    div.style.color = 'black';
+                };
+                div.onclick = () => this.addAminoAcid(code);
+                list.appendChild(div);
+            });
+        }
+
+        addAminoAcid(code) {
+            if (currentProteinIdentified) {
+                alert('✅ Proteini tanıdınız! Yeni bir protein oluşturmaya başlamak için "Temizle" butonuna tıklayın.');
+                return;
+            }
+
+            if (this.proteinChain.length >= 30) {
+                alert('⚠️ Maksimum 30 amino asit seçebilirsiniz!');
+                return;
+            }
+
+            this.proteinChain += code;
+            this.updateDisplay();
+            this.syncInputField();
+            this.enableIdentifyButton();
+        }
+
+        updateDisplay() {
+            const chainDiv = document.getElementById('proteinChain');
+            if (this.proteinChain.length === 0) {
+                chainDiv.innerHTML = '<span style="color: #999;">Buraya amino asitler eklenir...</span>';
+            } else {
+                chainDiv.innerHTML = this.proteinChain.split('').map((code, idx) => 
+                    `<div style="background: #2196F3; color: white; padding: 8px 12px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="game.removeAminoAcid(${idx})" title="Kaldırmak için tıkla">${code}</div>`
+                ).join('');
+            }
+            
+            document.getElementById('chainLength').textContent = this.proteinChain.length;
+            
+            // Sonuç bölümünü gizle
+            document.getElementById('resultBox').style.display = 'none';
+        }
+
+        removeAminoAcid(index) {
+            this.proteinChain = this.proteinChain.slice(0, index) + this.proteinChain.slice(index + 1);
+            this.updateDisplay();
+            this.syncInputField();
+        }
+
+        syncInputField() {
+            const aminoInput = document.getElementById('aminoInput');
+            if (aminoInput) {
+                aminoInput.value = this.proteinChain;
+            }
+        }
+
+        enableIdentifyButton() {
+            const btn = document.getElementById('identifyBtn');
+            if (this.proteinChain.length >= 5) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+            }
+        }
+
+        identifyProtein() {
+            if (currentProteinIdentified) {
+                alert('✅ Proteini tanıdınız! Yeni bir protein oluşturmaya başlamak için "Temizle" butonuna tıklayın.');
+                return;
+            }
+
+            this.attempts++;
+            document.getElementById('attempts').textContent = this.attempts;
+
+            // Zinciri küçük harflere çevir
+            const userChain = this.proteinChain;
+            
+            // Veritabanında ara
+            let match = null;
+            let matchPercentage = 0;
+
+            for (let protein of PROTEINS_DATABASE) {
+                // Tam eşleşme kontrolü
+                if (protein.chain.includes(userChain) || userChain.includes(protein.chain.substring(0, userChain.length))) {
+                    match = protein;
+                    matchPercentage = 100;
+                    break;
+                }
+
+                // Kısmi eşleşme kontrolü (en az 60% eşleşme)
+                const similarity = this.calculateSimilarity(userChain, protein.chain);
+                if (similarity > matchPercentage && similarity >= 60) {
+                    match = protein;
+                    matchPercentage = similarity;
+                }
+            }
+
+            this.showResult(match, matchPercentage, userChain);
+        }
+
+        calculateSimilarity(str1, str2) {
+            const len1 = str1.length;
+            const len2 = str2.length;
+            const maxLen = Math.max(len1, len2);
+
+            let matches = 0;
+            for (let i = 0; i < Math.min(len1, len2); i++) {
+                if (str1[i] === str2[i]) matches++;
+            }
+
+            return (matches / maxLen) * 100;
+        }
+
+        showResult(protein, similarity, userChain) {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'block';
+
+            if (protein && similarity === 100) {
+                // Tam eşleşme - başarılı
+                currentProteinIdentified = true;
+                const bonusPoints = 100 - (this.attempts - 1) * 10;
+                this.score += Math.max(bonusPoints, 10);
+                
+                document.getElementById('proteinName').textContent = `✅ ${protein.name}`;
+                document.getElementById('proteinDesc').textContent = `${protein.description}\n🎯 ${protein.knownFor}\n📊 Puan: +${Math.max(bonusPoints, 10)}\n🎯 Doğruluk: 100%\n\n⏳ 3 saniye sonra yeni oyuna başlanacak...`;
+                resultBox.style.background = '#E8F5E9';
+                resultBox.style.borderLeftColor = '#4CAF50';
+                
+                // Liderlik tablosuna kaydet
+                this.saveToLeaderboard();
+                
+                // 3 saniye sonra otomatik temizle
+                setTimeout(() => {
+                    this.clearChain();
+                }, 3000);
+                
+            } else if (protein && similarity > 60) {
+                // Kısmi eşleşme
+                const points = Math.floor(similarity / 2);
+                this.score += points;
+                const accuracy = Math.round((userChain.length / protein.chain.length) * 100);
+                
+                document.getElementById('proteinName').textContent = `🎯 ${protein.name} %${Math.round(similarity)}`;
+                document.getElementById('proteinDesc').textContent = `${protein.description}\n💡 İpucu: Daha fazla amino asit ekleyin!\n📊 Puan: +${points}\n✨ Benzerlik: %${Math.round(similarity)} | Doğruluk: %${accuracy}`;
+                resultBox.style.background = '#FFF9C4';
+                resultBox.style.borderLeftColor = '#F9A825';
+
+            } else {
+                // Eşleşme yok
+                document.getElementById('proteinName').textContent = '❌ Bilinmeyen Protein';
+                const unknownAccuracy = Math.round((userChain.length / 20) * 100);
+                document.getElementById('proteinDesc').textContent = `Oluşturduğunuz protein veritabanımızda bulunamadı.\n💡 Farklı amino asitler deneyin!\n🎯 Doğruluk: ${unknownAccuracy}%`;
+                resultBox.style.background = '#FFEBEE';
+                resultBox.style.borderLeftColor = '#f44336';
+            }
+
+            document.getElementById('scoreDisplay').textContent = this.score;
+            
+            // Leaderboard'ı güncelle
+            const playerName = localStorage.getItem('playerName') || this.playerName;
+            updateLeaderboard(playerName, this.score);
+        }
+
+        saveToLeaderboard() {
+            const currentName = localStorage.getItem('playerName') || this.playerName;
+            const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+            
+            const existingPlayer = leaderboard.find(p => p.name === currentName);
+            
+            if (existingPlayer) {
+                if (this.score > existingPlayer.score) {
+                    existingPlayer.score = this.score;
+                    existingPlayer.date = new Date().toLocaleString('tr-TR');
+                }
+            } else {
+                leaderboard.push({
+                    name: currentName,
+                    score: this.score,
+                    date: new Date().toLocaleString('tr-TR')
+                });
+            }
+            
+            leaderboard.sort((a, b) => b.score - a.score);
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        }
+
+        clearChain() {
+            this.proteinChain = '';
+            this.attempts = 0;
+            currentProteinIdentified = false;
+            this.updateDisplay();
+            document.getElementById('resultBox').style.display = 'none';
+            document.getElementById('attempts').textContent = '0';
+            
+            // Input alanını temizle
+            const aminoInput = document.getElementById('aminoInput');
+            if (aminoInput) {
+                aminoInput.value = '';
+                aminoInput.focus();
+            }
+            
+            this.syncInputField();
+        }
+
+        newGame(playerName) {
+            this.playerName = playerName;
+            this.score = 0;
+            this.proteinChain = '';
+            this.attempts = 0;
+            
+            document.getElementById('scoreDisplay').textContent = '0';
+            document.getElementById('displayName').textContent = playerName;
+            document.getElementById('chainLength').textContent = '0';
+            document.getElementById('attempts').textContent = '0';
+            document.getElementById('resultBox').style.display = 'none';
+            
+            this.updateDisplay();
+        }
+    }
+
+    const game = new ProteinBuilderGame();
+
+    // Amino asit input listener
+    const aminoInput = document.getElementById('aminoInput');
+    if (aminoInput) {
+        aminoInput.addEventListener('input', function(e) {
+            const validCodes = 'GAVLIPFWMCSTNQDEKRHY';
+            const input = e.target.value.toUpperCase();
+            
+            // Geçersiz karakterleri filtrele
+            let validInput = '';
+            for (let char of input) {
+                if (validCodes.includes(char)) {
+                    validInput += char;
+                }
+            }
+            
+            // Input'u güncelle
+            e.target.value = validInput;
+            
+            // Maksimum 30 karakter kontrol
+            if (validInput.length > 30) {
+                e.target.value = validInput.substring(0, 30);
+                validInput = e.target.value;
+            }
+            
+            // Game chain'ini güncelle
+            game.proteinChain = validInput;
+            game.updateDisplay();
+            game.enableIdentifyButton();
+        });
+    }
+
+    // Oyun başlatma
+    function startGame() {
+        console.log('startGame çağrıldı'); // Debug
+        let nameInput = document.getElementById('playerName').value.trim();
+        
+        if (nameInput === '') {
+            nameInput = localStorage.getItem('playerName') || '';
+        }
+        
+        if (nameInput === '') {
+            alert('⚠️ Lütfen adınızı girin veya profilde kaydedin!');
+            return;
+        }
+
+        if (nameInput.length > 15) {
+            alert('⚠️ Ad çok uzun! (max 15 karakter)');
+            return;
+        }
+
+        localStorage.setItem('playerName', nameInput);
+        
+        document.getElementById('nameScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+        
+        // Input alanını temizle
+        const aminoInput = document.getElementById('aminoInput');
+        if (aminoInput) {
+            aminoInput.value = '';
+            aminoInput.focus();
+        }
+        
+        game.newGame(nameInput);
+    }
+
+    // Enter tuşu ile başla
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && document.getElementById('nameScreen').style.display !== 'none') {
+            startGame();
+        }
+    });
+
+    // Input değiştiğinde localStorage'ü anında güncelle
+    const playerNameInput = document.getElementById('playerName');
+    if (playerNameInput) {
+        playerNameInput.addEventListener('input', function(e) {
+            const name = e.target.value.trim();
+            if (name) {
+                localStorage.setItem('playerName', name);
+                // Navbar'daki adı da anında güncelle
+                const navDisplay = document.getElementById('playerNameDisplay');
+                if (navDisplay) {
+                    navDisplay.textContent = name;
+                }
+            }
+        });
+    }
+
+    // localStorage'den adı yükle
+    window.addEventListener('load', function() {
+        const savedName = localStorage.getItem('playerName');
+        if (savedName) {
+            document.getElementById('playerName').value = savedName;
+        }
+        document.getElementById('playerName').focus();
+        
+        // URL doğru mu kontrol et - sayfayı yenilemede URL korunması gerekir
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes('/game/')) {
+            // Eğer oyun sayfasında değilsek oyun sayfasına yönlendir
+            console.warn('Uyarı: Oyun sayfası dışında işlem yapılmak isteniyor');
+        }
+    });
+</script>
+
+<style>
+    .amino-button:active {
+        transform: scale(0.95);
+    }
+</style>
+
+{% endblock %}

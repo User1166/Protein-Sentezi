@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}DNA Transkripsiyonu Oyunu - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div style="background: #f5f5f5; min-height: 100vh; padding: 20px;">
+    <div style="max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Oyuncu Adı Seçim Ekranı -->
+        <div id="nameScreen" style="background: white; padding: 40px; border-radius: 10px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333; margin-bottom: 20px;">🧬 DNA Transkripsiyonu Oyununa Hoşgeldiniz!</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 16px;">Lütfen adınızı girin veya seçin:</p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <input type="text" id="playerName" placeholder="Adınızı yazın..." style="padding: 10px 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 5px; width: 250px;" maxlength="15">
+                <button onclick="initGame()" style="padding: 10px 30px; background: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">Başla</button>
+            </div>
+        </div>
+
+        <!-- Oyun Ekranı (gizli başlangıçta) -->
+        <div id="gameScreen" style="display: none;">
+            <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h2 style="margin: 0; color: #333;">🧬 DNA Transkripsiyonu Oyunu</h2>
+                <div style="font-size: 18px; font-weight: bold; color: #2196F3;">
+                    👤 <span id="displayName"></span>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 14px; color: #666;">Puan</div>
+                    <div style="font-size: 28px; font-weight: bold; color: #4CAF50;" id="scoreDisplay">0</div>
+                </div>
+            </div>
+
+            <div style="background: #E3F2FD; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+                <strong>📖 Oyun Nasıl Oynanır:</strong><br>
+                DNA şeridini okuyarak doğru mRNA dizisini oluştur. Baz eşleştirme kuralları: A→U, T→A, G→C, C→G
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 250px; gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>DNA Şeridi:</h3>
+                    <div id="dnaDisplay" style="background: #f5f5f5; padding: 15px; border-radius: 5px; font-size: 18px; font-weight: bold; letter-spacing: 5px; margin-bottom: 20px; word-break: break-all;"></div>
+
+                    <h3>mRNA Çıkışı:</h3>
+                    <input type="text" id="mrnaInput" placeholder="mRNA dizisini yaz..." style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 5px; margin-bottom: 15px; font-family: monospace; letter-spacing: 2px;">
+
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="checkAnswer()" style="flex: 1; padding: 10px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">✓ Kontrol Et</button>
+                        <button onclick="nextRound()" style="flex: 1; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">→ Sonraki</button>
+                    </div>
+
+                    <div id="resultBox" style="display: none; margin-top: 15px; padding: 15px; border-radius: 5px; text-align: center;">
+                        <p id="resultText"></p>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: fit-content;">
+                    <h3 style="margin-top: 0;">Baz Eşleştirmesi</h3>
+                    <div style="background: #FFF9C4; padding: 10px; border-radius: 5px; font-size: 14px; margin-bottom: 15px;">
+                        <strong>DNA → mRNA</strong><br>
+                        A → U<br>
+                        T → A<br>
+                        G → C<br>
+                        C → G
+                    </div>
+
+                    <div style="padding: 15px; background: #FFF3E0; border-radius: 5px; border-left: 4px solid #FF9800;">
+                        <strong style="color: #E65100;">Puan Bilgisi</strong><br>
+                        <span style="color: #F57C00; font-size: 14px;" id="scoreInfo">Doğru cevap: +20 puan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const basePairs = {
+    'A': 'U',
+    'T': 'A',
+    'G': 'C',
+    'C': 'G'
+};
+
+let currentDNA = '';
+let correctmRNA = '';
+let currentScore = 0;
+let currentPlayerName = '';
+let attempts = 0;
+
+function generateDNA() {
+    const basePool = ['A', 'T', 'G', 'C'];
+    let dna = '';
+    for (let i = 0; i < 12; i++) {
+        dna += basePool[Math.floor(Math.random() * 4)];
+    }
+    return dna;
+}
+
+function transcribeDNA(dna) {
+    let mrna = '';
+    for (let base of dna) {
+        mrna += basePairs[base];
+    }
+    return mrna;
+}
+
+function startNewRound() {
+    currentDNA = generateDNA();
+    correctmRNA = transcribeDNA(currentDNA);
+    
+    document.getElementById('dnaDisplay').textContent = currentDNA;
+    document.getElementById('mrnaInput').value = '';
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('mrnaInput').focus();
+    attempts = 0;
+}
+
+function checkAnswer() {
+    const userAnswer = document.getElementById('mrnaInput').value.toUpperCase().trim();
+    const resultBox = document.getElementById('resultBox');
+    const resultText = document.getElementById('resultText');
+    
+    attempts++;
+    
+    resultBox.style.display = 'block';
+    
+    if (userAnswer === correctmRNA) {
+        const points = Math.max(20 - (attempts - 1) * 5, 5);
+        currentScore += points;
+        resultBox.style.background = '#E8F5E9';
+        resultBox.style.borderLeft = '4px solid #4CAF50';
+        resultText.style.color = '#2E7D32';
+        resultText.innerHTML = `✅ Doğru! +${points} puan kazandın!`;
+        document.getElementById('scoreDisplay').textContent = currentScore;
+        
+        // Leaderboard'ı güncelle
+        updateLeaderboard(currentPlayerName, currentScore);
+    } else {
+        resultBox.style.background = '#FFEBEE';
+        resultBox.style.borderLeft = '4px solid #f44336';
+        resultText.style.color = '#C62828';
+        resultText.innerHTML = `❌ Yanlış! Doğru cevap: ${correctmRNA}`;
+    }
+}
+
+function nextRound() {
+    startNewRound();
+}
+
+function initGame() {
+    console.log('initGame çağrıldı'); // Debug
+    let nameInput = document.getElementById('playerName').value.trim();
+    
+    if (nameInput === '') {
+        nameInput = localStorage.getItem('playerName') || '';
+    }
+    
+    if (nameInput === '') {
+        alert('⚠️ Lütfen adınızı girin!');
+        return;
+    }
+    
+    localStorage.setItem('playerName', nameInput);
+    currentPlayerName = nameInput;
+    
+    document.getElementById('nameScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
+    document.getElementById('displayName').textContent = nameInput;
+    document.getElementById('scoreDisplay').textContent = '0';
+    
+    currentScore = 0;
+    startNewRound();
+}
+
+document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && document.getElementById('nameScreen').style.display !== 'none') {
+        initGame();
+    }
+    if (e.key === 'Enter' && document.getElementById('gameScreen').style.display !== 'none') {
+        checkAnswer();
+    }
+});
+
+const playerNameInput = document.getElementById('playerName');
+if (playerNameInput) {
+    playerNameInput.addEventListener('input', function(e) {
+        const name = e.target.value.trim();
+        if (name) {
+            localStorage.setItem('playerName', name);
+            // Navbar'daki adı da anında güncelle
+            const navDisplay = document.getElementById('playerNameDisplay');
+            if (navDisplay) {
+                navDisplay.textContent = name;
+            }
+        }
+    });
+}
+
+window.addEventListener('load', function() {
+    const savedName = localStorage.getItem('playerName');
+    if (savedName) {
+        document.getElementById('playerName').value = savedName;
+        // Otomatik oyunu başlat
+        setTimeout(() => {
+            initGame();
+        }, 100);
+    }
+    document.getElementById('playerName').focus();
+});
+</script>
+{% endblock %}

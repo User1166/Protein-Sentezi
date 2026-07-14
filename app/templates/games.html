@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Oyunlar - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div class="games-section">
+    <div class="container">
+        <h1>Interaktif Oyunlar</h1>
+        <p class="lead">Öğrendiğini oyunlar ile pratik yap ve eğlen!</p>
+
+        <div class="games-grid">
+            <!-- Oyun 1: Transkripsiyoni -->
+            <div class="game-card">
+                <div class="game-icon">📝</div>
+                <h2>DNA Transkripsiyonu</h2>
+                <p>DNA şeridini oku ve mRNA sentezle! Baz eşleştirme kurallarını kullanarak doğru mRNA dizisini oluştur.</p>
+                
+                <div class="game-features">
+                    <span class="feature">⭐ Seviye: Başlangıç</span>
+                    <span class="feature">⏱️ Süre: 5-10 dakika</span>
+                    <span class="feature">🎯 Puan: 50 puan</span>
+                </div>
+                
+                <div class="game-difficulty">
+                    <button class="btn btn-small" onclick="startGame('transcription', 'easy')">Kolay</button>
+                    <button class="btn btn-small" onclick="startGame('transcription', 'medium')">Orta</button>
+                    <button class="btn btn-small" onclick="startGame('transcription', 'hard')">Zor</button>
+                </div>
+            </div>
+
+            <!-- Oyun 2: Translasyon -->
+            <div class="game-card">
+                <div class="game-icon">🧩</div>
+                <h2>mRNA Translasyonu</h2>
+                <p>mRNA'daki kodonları oku ve doğru amino asitleri seç! Ribozomda proteinleri oluştur.</p>
+                
+                <div class="game-features">
+                    <span class="feature">⭐ Seviye: Orta</span>
+                    <span class="feature">⏱️ Süre: 10-15 dakika</span>
+                    <span class="feature">🎯 Puan: 75 puan</span>
+                </div>
+                
+                <div class="game-difficulty">
+                    <button class="btn btn-small" onclick="startGame('translation', 'easy')">Kolay</button>
+                    <button class="btn btn-small" onclick="startGame('translation', 'medium')">Orta</button>
+                    <button class="btn btn-small" onclick="startGame('translation', 'hard')">Zor</button>
+                </div>
+            </div>
+
+            <!-- Oyun 3: Protein Katlama -->
+            <div class="game-card">
+                <div class="game-icon">🏗️</div>
+                <h2>Protein Katlama</h2>
+                <p>Amino asit zincirini doğru şekle katla! Proteininin işlevini etkileyen katlanma kritiktir.</p>
+                
+                <div class="game-features">
+                    <span class="feature">⭐ Seviye: İleri</span>
+                    <span class="feature">⏱️ Süre: 15-20 dakika</span>
+                    <span class="feature">🎯 Puan: 100 puan</span>
+                </div>
+                
+                <div class="game-difficulty">
+                    <button class="btn btn-small" onclick="startGame('folding', 'easy')">Kolay</button>
+                    <button class="btn btn-small" onclick="startGame('folding', 'medium')">Orta</button>
+                    <button class="btn btn-small" onclick="startGame('folding', 'hard')">Zor</button>
+                </div>
+            </div>
+
+            <!-- Oyun 4: Protein Oluşturucu -->
+            <div class="game-card">
+                <div class="game-icon">🧬</div>
+                <h2>Protein Oluşturucu</h2>
+                <p>Rastgele amino asitler seçerek protein oluştur! Websitemiz hangi proteinin olduğunu tanıyacak.</p>
+                
+                <div class="game-features">
+                    <span class="feature">⭐ Seviye: Ileri</span>
+                    <span class="feature">⏱️ Süre: 10-15 dakika</span>
+                    <span class="feature">🎯 Puan: 50-100 puan</span>
+                </div>
+                
+                <div class="game-difficulty">
+                    <button class="btn btn-small" onclick="window.location.href='/game/protein_builder'">Başla</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="games-info">
+            <h2>Oyunlar Hakkında</h2>
+            <p>Bu oyunlar protein sentezinin tüm aşamalarını kapsar. Her oyunu oynayarak:</p>
+            <ul>
+                <li>✅ Protein sentezi sürecini derinlemesine öğrenirsin</li>
+                <li>✅ Puan kazanır ve sıralamada yükselişin</li>
+                <li>✅ Geri bildirimi alarak hatalarını düzeltirsin</li>
+                <li>✅ Zorluk seviyelerini tamamlayarak başarı elde edersin</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function startGame(gameType, difficulty) {
+    // Oyunun link'ini aç
+    window.location.href = `/game/${gameType}?difficulty=${difficulty}`;
+}
+</script>
+{% endblock %}

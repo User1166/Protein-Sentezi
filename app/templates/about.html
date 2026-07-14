@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Hakkında - Protein Sentezi{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="container">
+        <h1>Hakkında</h1>
+        
+        <div class="about-content">
+            <h2>Protein Sentezi Eğitim Platformu</h2>
+            <p>Bu platform, lise biyoloji dersinde protein sentezini interaktif ve eğlenceli bir şekilde öğrenmeyi sağlamak için oluşturulmuştur.</p>
+            
+            <h3>Amaç</h3>
+            <p>Öğrencilerin protein sentezinin karmaşık sürecini adım adım anlayabilmesi, oyunlar aracılığıyla pratik yapabilmesi ve bilgilerini test edebilmesidir.</p>
+            
+            <h3>Özellikler</h3>
+            <ul>
+                <li><strong>Eğitici Modüller:</strong> DNA, RNA, Transkripsiyoni, Translasyon ve Protein yapısı hakkında detaylı bilgiler</li>
+                <li><strong>İnteraktif Oyunlar:</strong> Protein sentezinin her aşamasını oyunlar ile pratik yapma</li>
+                <li><strong>Quiz Sistemi:</strong> Bilgileri test etme ve puan kazanma</li>
+                <li><strong>Liderlik Tablosu:</strong> Diğer oyuncularla rekabet etme</li>
+                <li><strong>İlerleme Takibi:</strong> Hangi konularda iyi olduğunu görme</li>
+            </ul>
+            
+            <h3>Nasıl Kullanılır</h3>
+            <ol>
+                <li>Önce <strong>Öğren</strong> sayfasından modülleri oku ve bilgi edin</li>
+                <li>Ardından <strong>Quiz</strong> bölümünde bilgini sınayarak puan kazanır</li>
+                <li>Son olarak <strong>Oyunlar</strong> sayfasında interaktif oyunları oyna</li>
+                <li><strong>Liderlik Tablosu</strong>nda diğer oyuncularla kıyasla ve daha iyi olmaya çalış</li>
+            </ol>
+            
+            <h3>Konular</h3>
+            <div class="topics-grid">
+                <div class="topic">
+                    <h4>🧬 DNA</h4>
+                    <p>Deoksiribonükleik asitin yapısı, işlevi ve genetik bilgiyi taşıyışı</p>
+                </div>
+                <div class="topic">
+                    <h4>📝 Transkripsiyoni</h4>
+                    <p>DNA'nın mRNA'ya kopyalanması ve RNA polimerazın rolü</p>
+                </div>
+                <div class="topic">
+                    <h4>🔤 mRNA ve Kodonlar</h4>
+                    <p>mRNA yapısı, kodonlar ve genetik kodun evrenselliği</p>
+                </div>
+                <div class="topic">
+                    <h4>🧩 Translasyon</h4>
+                    <p>mRNA'nın ribozomda okunması ve protein sentezi</p>
+                </div>
+                <div class="topic">
+                    <h4>🏗️ Protein Yapısı</h4>
+                    <p>Amino asitler, peptit bağları ve proteinlerin işlevleri</p>
+                </div>
+            </div>
+            
+            <h3>Teknoloji</h3>
+            <p><strong>Arka Yüz (Backend):</strong> Python Flask web çatısı ile yapılmıştır</p>
+            <p><strong>Veri Tabanı:</strong> SQLite ile kullanıcı verileri ve ilerlemeler tutulur</p>
+            <p><strong>Ön Yüz (Frontend):</strong> HTML5, CSS3 ve JavaScript ile interaktif deneyim sağlanır</p>
+            
+            <h3>Geri Bildirim</h3>
+            <p>Herhangi bir soru, istek veya hata bulduğunuzda lütfen bize iletişim kurun. Platformu geliştirmemize yardımcı olunuz!</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
